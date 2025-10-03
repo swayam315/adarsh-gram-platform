@@ -1,0 +1,314 @@
+/* Form Specific Styles */
+.form-progress {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.progress-bar-container {
+    background: var(--border);
+    border-radius: 10px;
+    height: 8px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+    transition: width 0.3s ease;
+}
+
+/* Form Steps Navigation */
+.form-steps-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.form-steps-container::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--border);
+    z-index: 1;
+}
+
+.form-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    flex: 1;
+}
+
+.step-indicator {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+}
+
+.form-step.active .step-indicator {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.form-step.completed .step-indicator {
+    background: var(--success);
+    color: var(--white);
+}
+
+.step-label {
+    font-size: 0.9em;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.form-step.active .step-label {
+    color: var(--primary-dark);
+    font-weight: 600;
+}
+
+/* Form Sections */
+.form-section-card {
+    background: var(--white);
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-left: 4px solid var(--primary-color);
+}
+
+.form-section-header {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--border);
+}
+
+.form-section-header h3 {
+    color: var(--primary-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-section-header p {
+    color: var(--text-light);
+    margin-top: 5px;
+}
+
+/* Enhanced Form Controls */
+.form-group-enhanced {
+    margin-bottom: 25px;
+}
+
+.form-group-enhanced label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    background: var(--white);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+}
+
+.form-control.error {
+    border-color: var(--error);
+}
+
+.form-hint {
+    font-size: 0.85em;
+    color: var(--text-light);
+    margin-top: 5px;
+}
+
+.form-error {
+    color: var(--error);
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
+/* Checkbox and Radio Groups */
+.checkbox-group, .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkbox-item, .radio-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-item input, .radio-item input {
+    width: auto;
+}
+
+.checkbox-item label, .radio-item label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+/* File Upload */
+.file-upload {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.file-upload:hover {
+    border-color: var(--primary-color);
+}
+
+.file-upload input {
+    display: none;
+}
+
+.file-upload-label {
+    cursor: pointer;
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.file-upload-label i {
+    font-size: 2em;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Dynamic Form Elements */
+.dynamic-list {
+    margin: 15px 0;
+}
+
+.dynamic-item {
+    background: var(--background);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border-left: 3px solid var(--primary-light);
+}
+
+.dynamic-item-header {
+    display: flex;
+    justify-content: between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.dynamic-item-title {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.remove-item {
+    background: var(--error);
+    color: var(--white);
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 0.8em;
+}
+
+/* Form Actions */
+.form-actions-enhanced {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+}
+
+.form-actions-enhanced .btn {
+    min-width: 120px;
+}
+
+/* Summary Review */
+.summary-review {
+    background: var(--background);
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.summary-item:last-child {
+    border-bottom: none;
+}
+
+.summary-label {
+    font-weight: 600;
+    color: var(--text-dark);
+}
+
+.summary-value {
+    color: var(--text-light);
+}
+
+/* Responsive Forms */
+@media (max-width: 768px) {
+    .form-steps-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .form-steps-container::before {
+        display: none;
+    }
+    
+    .form-step {
+        flex-direction: row;
+        gap: 15px;
+    }
+    
+    .step-label {
+        text-align: left;
+    }
+    
+    .form-actions-enhanced {
+        flex-direction: column;
+    }
+    
+    .form-section-card {
+        padding: 15px;
+    }
+}
