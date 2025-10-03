@@ -1,19 +1,19 @@
 // Service Worker for Offline Functionality
-const CACHE_NAME = 'pm-ajay-platform-v1.0';
+const CACHE_NAME = 'pm-ajay-village-portal-v1.0';
 const urlsToCache = [
     './',
     './index.html',
-    './styles/main.css',
-    './styles/dashboard.css',
-    './styles/forms.css',
-    './js/app.js',
-    './js/dashboard.js',
-    './js/forms.js',
-    './js/map.js',
+    './styles.css',
+    './app.js',
+    './dashboard.js',
+    './forms.js',
+    './map.js',
     './manifest.json',
     'https://unpkg.com/leaflet@1.7.1/dist/leaflet.css',
     'https://unpkg.com/leaflet@1.7.1/dist/leaflet.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css'
+    'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css',
+    'https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap',
+    'https://cdn.jsdelivr.net/npm/chart.js'
 ];
 
 self.addEventListener('install', function(event) {
