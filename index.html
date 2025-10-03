@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PM-AJAY Adarsh Gram Platform</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/forms.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <img src="assets/icons/govt-logo.png" alt="Government Logo" class="govt-logo">
+                <div class="logo-text">
+                    <span class="main-title">PM-AJAY</span>
+                    <span class="sub-title">Adarsh Gram Platform</span>
+                </div>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="nav-link active" onclick="showSection('dashboard')">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
+                <a href="#" class="nav-link" onclick="showSection('village-profile')">
+                    <i class="fas fa-village"></i> Village Profile
+                </a>
+                <a href="#" class="nav-link" onclick="showSection('infrastructure-assessment')">
+                    <i class="fas fa-hard-hat"></i> Infrastructure
+                </a>
+                <a href="#" class="nav-link" onclick="showSection('household-survey')">
+                    <i class="fas fa-clipboard-list"></i> Household Survey
+                </a>
+                <a href="#" class="nav-link" onclick="showSection('vdp')">
+                    <i class="fas fa-file-alt"></i> VDP
+                </a>
+                <a href="#" class="nav-link" onclick="showSection('monitoring')">
+                    <i class="fas fa-chart-line"></i> Monitoring
+                </a>
+                <div class="user-menu">
+                    <button class="login-btn" onclick="showSection('admin-login')">
+                        <i class="fas fa-user-shield"></i> Admin
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="content-section active">
+            <div class="dashboard-header">
+                <h1>PM-AJAY Adarsh Gram Dashboard</h1>
+                <p>Comprehensive platform for SC-majority village development</p>
+            </div>
+            
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-icon primary">
+                        <i class="fas fa-village"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-villages">0</h3>
+                        <p>Registered Villages</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="adarsh-grams">0</h3>
+                        <p>Adarsh Grams</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">
+                        <i class="fas fa-hard-hat"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="ongoing-projects">0</h3>
+                        <p>Ongoing Projects</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon info">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="beneficiaries">0</h3>
+                        <p>Beneficiaries</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="grid-item">
+                    <h3>Quick Actions</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="showSection('village-profile')">
+                            <i class="fas fa-plus"></i> Register New Village
+                        </button>
+                        <button class="action-btn" onclick="showSection('infrastructure-assessment')">
+                            <i class="fas fa-clipboard-check"></i> Infrastructure Assessment
+                        </button>
+                        <button class="action-btn" onclick="showSection('household-survey')">
+                            <i class="fas fa-house-user"></i> Start Household Survey
+                        </button>
+                        <button class="action-btn" onclick="showSection('vdp')">
+                            <i class="fas fa-file-contract"></i> Create VDP
+                        </button>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <h3>Recent Activity</h3>
+                    <div id="recent-activity" class="activity-list">
+                        <!-- Activity items will be loaded here -->
+                    </div>
+                </div>
+
+                <div class="grid-item full-width">
+                    <h3>Village Progress Map</h3>
+                    <div id="progress-map" class="map-container"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Village Profile Section (Format-1) -->
+        <section id="village-profile" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-village"></i> Village Profile & Convergence Committee</h2>
+                <p>Format-1: Basic village details and committee formation</p>
+            </div>
+            <!-- Form content will be loaded dynamically -->
+        </section>
+
+        <!-- Infrastructure Assessment Section (Format-2 & Format-4) -->
+        <section id="infrastructure-assessment" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-hard-hat"></i> Infrastructure Assessment & Action Plan</h2>
+                <p>Format-2 & Format-4: Gap assessment and estimated action plan</p>
+            </div>
+            <!-- Form content will be loaded dynamically -->
+        </section>
+
+        <!-- Household Survey Section (Format-3A & Format-3B) -->
+        <section id="household-survey" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-clipboard-list"></i> Household Survey & Beneficiary Mapping</h2>
+                <p>Format-3A & Format-3B: Individual needs assessment and scheme mapping</p>
+            </div>
+            <!-- Form content will be loaded dynamically -->
+        </section>
+
+        <!-- VDP Section -->
+        <section id="vdp" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-file-alt"></i> Village Development Plan (VDP)</h2>
+                <p>Comprehensive development plan formulation and approval</p>
+            </div>
+            <!-- VDP content will be loaded dynamically -->
+        </section>
+
+        <!-- Monitoring Section -->
+        <section id="monitoring" class="content-section">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-line"></i> Monitoring & Evaluation</h2>
+                <p>50 Monitorable Indicators Tracking</p>
+            </div>
+            <!-- Monitoring content will be loaded dynamically -->
+        </section>
+
+        <!-- Admin Login Section -->
+        <section id="admin-login" class="content-section">
+            <div class="login-container">
+                <div class="login-card">
+                    <div class="login-header">
+                        <img src="assets/icons/govt-logo.png" alt="Government Logo" class="login-logo">
+                        <h2>Government Official Login</h2>
+                    </div>
+                    <form id="admin-login-form">
+                        <div class="form-group">
+                            <label for="official-id">Official ID</label>
+                            <input type="text" id="official-id" placeholder="Enter your official ID" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" placeholder="Enter your password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <select id="department" required>
+                                <option value="">Select Department</option>
+                                <option value="mosje">Ministry of Social Justice & Empowerment</option>
+                                <option value="rural">Ministry of Rural Development</option>
+                                <option value="state">State Department</option>
+                                <option value="district">District Administration</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>PM-AJAY Adarsh Gram</h4>
+                <p>Pradhan Mantri Anusuchit Jaati Abhyudaya Yojana</p>
+                <p>Ministry of Social Justice & Empowerment</p>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>Email: pmajay@socialjustice.gov.in</p>
+                <p>Helpline: 1800-11-0001</p>
+            </div>
+            <div class="footer-section">
+                <h4>Important Links</h4>
+                <a href="https://pmagy.gov.in" target="_blank">Official Website</a>
+                <a href="https://socialjustice.gov.in" target="_blank">MoSJE</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Ministry of Social Justice & Empowerment. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/forms.js"></script>
+    <script src="js/map.js"></script>
+</body>
+</html>
