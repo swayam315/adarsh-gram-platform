@@ -407,4 +407,57 @@ class FormsManager {
                         <input type="text" name="activity-desc-${itemId}" class="form-control" required>
                     </div>
                     <div class="form-group-enhanced">
-                       
+                        <label>Estimated Cost (₹)</label>
+                        <input type="number" name="activity-cost-${itemId}" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group-enhanced">
+                        <label>Timeline (Months)</label>
+                        <input type="number" name="activity-timeline-${itemId}" class="form-control" required>
+                    </div>
+                    <div class="form-group-enhanced">
+                        <label>Responsible Department</label>
+                        <select name="activity-dept-${itemId}" class="form-control" required>
+                            <option value="">Select Department</option>
+                            <option value="rural-development">Rural Development</option>
+                            <option value="education">Education</option>
+                            <option value="health">Health</option>
+                            <option value="water">Water Resources</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        container.insertAdjacentHTML('beforeend', itemHTML);
+    }
+
+    removeActionItem(itemId) {
+        const item = document.getElementById(`action-item-${itemId}`);
+        if (item) {
+            item.remove();
+        }
+    }
+
+    saveDraft() {
+        // Save form data to localStorage as draft
+        const formData = this.collectFormData('infrastructure-form');
+        localStorage.setItem('infrastructure-draft', JSON.stringify({
+            data: formData,
+            currentStep: this.currentStep,
+            savedAt: new Date().toISOString()
+        }));
+        
+        alert('Draft saved successfully!');
+    }
+}
+
+// Initialize forms manager
+let formsManager;
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.app) {
+        formsManager = new FormsManager(window.app);
+        window.formsManager = formsManager;
+    }
+});
