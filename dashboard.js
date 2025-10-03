@@ -1,4 +1,6 @@
 // Dashboard Specific Functionality
+// Dashboard specific functionality can be added here if needed
+console.log('Dashboard module loaded');
 class DashboardManager {
     constructor(app) {
         this.app = app;
