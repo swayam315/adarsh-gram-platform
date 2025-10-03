@@ -8,15 +8,16 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="styles/dashboard.css">
-    <link rel="stylesheet" href="styles/forms.css">
+    <!-- Remove these lines since we'll combine all CSS in styles.css -->
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <img src="assets/icons/govt-logo.png" alt="Government Logo" class="govt-logo" onerror="this.style.display='none'">
+                <div class="logo-placeholder" style="width: 40px; height: 40px; background: #fff; border-radius: 5px; display: flex; align-items: center; justify-content: center; margin-right: 12px;">
+                    <i class="fas fa-landmark" style="color: #2E7D32;"></i>
+                </div>
                 <div class="logo-text">
                     <span class="main-title">PM-AJAY</span>
                     <span class="sub-title">Adarsh Gram Platform</span>
@@ -116,33 +117,17 @@
 
                 <div class="grid-item full-width">
                     <h3>Village Progress Map</h3>
-                    <div id="progress-map" class="map-container"></div>
-                </div>
-            </div>
-
-            <!-- Additional Dashboard Sections -->
-            <div class="dashboard-grid">
-                <div class="grid-item">
-                    <h3>Village Status Distribution</h3>
-                    <div id="village-status-chart" class="chart-container">
-                        <div class="chart-placeholder">
-                            <i class="fas fa-chart-pie"></i> Chart will be displayed here
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="grid-item">
-                    <h3>Implementation Progress</h3>
-                    <div id="progress-chart" class="chart-container">
-                        <div class="chart-placeholder">
-                            <i class="fas fa-chart-bar"></i> Progress chart will be displayed here
+                    <div id="progress-map" class="map-container">
+                        <div style="padding: 20px; text-align: center; color: #666;">
+                            <i class="fas fa-map" style="font-size: 3em; margin-bottom: 10px;"></i>
+                            <p>Interactive map will load here</p>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Other sections remain the same but will be populated dynamically -->
+        <!-- Village Profile Section -->
         <section id="village-profile" class="content-section">
             <div class="section-header">
                 <h2><i class="fas fa-village"></i> Village Profile & Convergence Committee</h2>
@@ -151,6 +136,7 @@
             <!-- Form content will be loaded dynamically by app.js -->
         </section>
 
+        <!-- Infrastructure Assessment Section -->
         <section id="infrastructure-assessment" class="content-section">
             <div class="section-header">
                 <h2><i class="fas fa-hard-hat"></i> Infrastructure Assessment & Action Plan</h2>
@@ -159,6 +145,7 @@
             <!-- Form content will be loaded dynamically by forms.js -->
         </section>
 
+        <!-- Household Survey Section -->
         <section id="household-survey" class="content-section">
             <div class="section-header">
                 <h2><i class="fas fa-clipboard-list"></i> Household Survey & Beneficiary Mapping</h2>
@@ -167,27 +154,44 @@
             <!-- Form content will be loaded dynamically by forms.js -->
         </section>
 
+        <!-- VDP Section -->
         <section id="vdp" class="content-section">
             <div class="section-header">
                 <h2><i class="fas fa-file-alt"></i> Village Development Plan (VDP)</h2>
                 <p>Comprehensive development plan formulation and approval</p>
             </div>
-            <!-- VDP content will be loaded dynamically -->
+            <div class="form-container">
+                <h3>VDP Formulation</h3>
+                <p>Village Development Plan creation interface will be implemented here</p>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> This section is under development
+                </div>
+            </div>
         </section>
 
+        <!-- Monitoring Section -->
         <section id="monitoring" class="content-section">
             <div class="section-header">
                 <h2><i class="fas fa-chart-line"></i> Monitoring & Evaluation</h2>
                 <p>50 Monitorable Indicators Tracking</p>
             </div>
-            <!-- Monitoring content will be loaded dynamically -->
+            <div class="form-container">
+                <h3>Monitoring Dashboard</h3>
+                <p>Real-time tracking of 50 monitorable indicators</p>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i> Monitoring features will be implemented here
+                </div>
+            </div>
         </section>
 
+        <!-- Admin Login Section -->
         <section id="admin-login" class="content-section">
             <div class="login-container">
                 <div class="login-card">
                     <div class="login-header">
-                        <img src="assets/icons/govt-logo.png" alt="Government Logo" class="login-logo" onerror="this.style.display='none'">
+                        <div class="logo-placeholder" style="width: 60px; height: 60px; background: #2E7D32; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                            <i class="fas fa-landmark" style="color: #fff; font-size: 1.5em;"></i>
+                        </div>
                         <h2>Government Official Login</h2>
                     </div>
                     <form id="admin-login-form">
@@ -244,9 +248,9 @@
 
     <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="js/app.js"></script>
-    <script src="js/dashboard.js"></script>
-    <script src="js/forms.js"></script>
-    <script src="js/map.js"></script>
+    <script src="app.js"></script>
+    <script src="dashboard.js"></script>
+    <script src="forms.js"></script>
+    <script src="map.js"></script>
 </body>
 </html>
