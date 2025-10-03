@@ -4,18 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PM-AJAY Village Volunteer Portal</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
 </head>
 <body class="login-page">
     <!-- Login Page -->
     <div id="login-page" class="login-page-container">
-        <div class="login-background">
-            <div class="login-overlay"></div>
-        </div>
+        <div class="login-background"></div>
+        <div class="login-overlay"></div>
         
         <div class="login-center-container">
             <div class="login-card">
@@ -86,17 +83,11 @@
                     <a href="#" class="nav-link" onclick="showSection('village-profile')">
                         <i class="fas fa-village"></i> Village Profile
                     </a>
-                    <a href="#" class="nav-link" onclick="showSection('infrastructure-assessment')">
+                    <a href="#" class="nav-link" onclick="showSection('infrastructure')">
                         <i class="fas fa-hard-hat"></i> Infrastructure
                     </a>
-                    <a href="#" class="nav-link" onclick="showSection('household-survey')">
+                    <a href="#" class="nav-link" onclick="showSection('survey')">
                         <i class="fas fa-clipboard-list"></i> Household Survey
-                    </a>
-                    <a href="#" class="nav-link" onclick="showSection('vdp')">
-                        <i class="fas fa-file-alt"></i> VDP
-                    </a>
-                    <a href="#" class="nav-link" onclick="showSection('monitoring')">
-                        <i class="fas fa-chart-line"></i> Monitoring
                     </a>
                     <div class="user-menu">
                         <button class="logout-btn" onclick="logout()">
@@ -155,22 +146,18 @@
                     </div>
                 </div>
 
-                <!-- Quick Actions Grid -->
                 <div class="dashboard-grid">
                     <div class="grid-item">
                         <h3>Quick Actions</h3>
                         <div class="action-buttons">
-                            <button class="action-btn" onclick="showSection('infrastructure-assessment')">
+                            <button class="action-btn" onclick="showSection('infrastructure')">
                                 <i class="fas fa-plus"></i> Add New Requirement
                             </button>
-                            <button class="action-btn" onclick="showSection('household-survey')">
+                            <button class="action-btn" onclick="showSection('survey')">
                                 <i class="fas fa-upload"></i> Upload Survey Data
                             </button>
                             <button class="action-btn" onclick="showSection('village-profile')">
                                 <i class="fas fa-eye"></i> View Progress
-                            </button>
-                            <button class="action-btn" onclick="showSection('infrastructure-assessment')">
-                                <i class="fas fa-tools"></i> Report Infrastructure Issue
                             </button>
                         </div>
                     </div>
@@ -178,24 +165,11 @@
                     <div class="grid-item">
                         <h3>Recent Activity</h3>
                         <div id="recent-activity" class="activity-list">
-                            <!-- Activity items will be loaded here -->
-                        </div>
-                    </div>
-
-                    <div class="grid-item full-width">
-                        <h3>Village Development Progress</h3>
-                        <div class="progress-chart-container">
-                            <canvas id="village-progress-chart"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Requirements Overview -->
-                <div class="dashboard-grid">
-                    <div class="grid-item full-width">
-                        <h3>Current Requirements Status</h3>
-                        <div id="requirements-status" class="requirements-grid">
-                            <!-- Requirements will be loaded here -->
+                            <div class="activity-item">
+                                <div class="activity-title">Welcome to PM-AJAY Portal</div>
+                                <div class="activity-desc">Start by adding your village requirements or uploading survey data</div>
+                                <div class="activity-time">Just now</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -204,456 +178,97 @@
             <!-- Village Profile Section -->
             <section id="village-profile" class="content-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-village"></i> Village Profile & Progress Tracking</h2>
-                    <p>View village details, committee information, and requirement progress</p>
+                    <h2><i class="fas fa-village"></i> Village Profile</h2>
+                    <p>View your village details and development progress</p>
                 </div>
-
                 <div class="profile-container">
-                    <div class="profile-grid">
-                        <!-- Village Details Card -->
-                        <div class="profile-card">
-                            <h3><i class="fas fa-info-circle"></i> Village Information</h3>
-                            <div class="village-details">
-                                <div class="detail-item">
-                                    <label>Village Name:</label>
-                                    <span id="profile-village-name">-</span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>Gram Panchayat:</label>
-                                    <span id="profile-gram-panchayat">-</span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>District:</label>
-                                    <span id="profile-district">-</span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>Total Population:</label>
-                                    <span id="profile-population">-</span>
-                                </div>
-                                <div class="detail-item">
-                                    <label>SC Population:</label>
-                                    <span id="profile-sc-population">-</span>
-                                </div>
+                    <div class="profile-card">
+                        <h3>Village Information</h3>
+                        <div class="village-details">
+                            <div class="detail-item">
+                                <label>Village Name:</label>
+                                <span id="profile-village-name">-</span>
                             </div>
-                        </div>
-
-                        <!-- Committee Details Card -->
-                        <div class="profile-card">
-                            <h3><i class="fas fa-users"></i> Convergence Committee</h3>
-                            <div id="committee-members-list">
-                                <!-- Committee members will be loaded here -->
+                            <div class="detail-item">
+                                <label>Gram Panchayat:</label>
+                                <span id="profile-gram-panchayat">-</span>
                             </div>
-                        </div>
-
-                        <!-- Progress Tracking Card -->
-                        <div class="profile-card full-width">
-                            <h3><i class="fas fa-chart-line"></i> Requirement Progress Tracking</h3>
-                            <div class="progress-tracking">
-                                <div class="progress-stages">
-                                    <div class="stage active">
-                                        <div class="stage-icon">1</div>
-                                        <div class="stage-info">
-                                            <h4>Requirements Submitted</h4>
-                                            <p id="submitted-count">0 requirements sent to admin</p>
-                                        </div>
-                                    </div>
-                                    <div class="stage">
-                                        <div class="stage-icon">2</div>
-                                        <div class="stage-info">
-                                            <h4>Under Review</h4>
-                                            <p id="review-count">0 requirements being reviewed</p>
-                                        </div>
-                                    </div>
-                                    <div class="stage">
-                                        <div class="stage-icon">3</div>
-                                        <div class="stage-info">
-                                            <h4>Approved</h4>
-                                            <p id="approved-count">0 requirements approved</p>
-                                        </div>
-                                    </div>
-                                    <div class="stage">
-                                        <div class="stage-icon">4</div>
-                                        <div class="stage-info">
-                                            <h4>Implementation</h4>
-                                            <p id="implementation-count">0 projects in progress</p>
-                                        </div>
-                                    </div>
-                                    <div class="stage">
-                                        <div class="stage-icon">5</div>
-                                        <div class="stage-info">
-                                            <h4>Completed</h4>
-                                            <p id="completed-count">0 projects completed</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Requirements Details -->
-                        <div class="profile-card full-width">
-                            <h3><i class="fas fa-list"></i> Detailed Requirements Status</h3>
-                            <div class="requirements-details">
-                                <table class="requirements-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Requirement</th>
-                                            <th>Type</th>
-                                            <th>Status</th>
-                                            <th>Submitted Date</th>
-                                            <th>Progress</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="requirements-details-body">
-                                        <!-- Requirements details will be loaded here -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- Growth Chart -->
-                        <div class="profile-card full-width">
-                            <h3><i class="fas fa-seedling"></i> Village Development Growth</h3>
-                            <div class="growth-chart-container">
-                                <canvas id="village-growth-chart"></canvas>
+                            <div class="detail-item">
+                                <label>District:</label>
+                                <span id="profile-district">-</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Infrastructure Assessment Section -->
-            <section id="infrastructure-assessment" class="content-section">
+            <!-- Infrastructure Section -->
+            <section id="infrastructure" class="content-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-hard-hat"></i> Infrastructure Requirements & Issues</h2>
+                    <h2><i class="fas fa-hard-hat"></i> Infrastructure Requirements</h2>
                     <p>Add new requirements and report infrastructure issues</p>
                 </div>
-
                 <div class="infrastructure-container">
-                    <div class="infrastructure-grid">
-                        <!-- Add New Requirement -->
-                        <div class="infrastructure-card">
-                            <h3><i class="fas fa-plus-circle"></i> Add New Requirement</h3>
-                            <form id="new-requirement-form" class="requirement-form">
-                                <div class="form-group">
-                                    <label for="requirement-title">Requirement Title *</label>
-                                    <input type="text" id="requirement-title" placeholder="e.g., New School Building, Road Repair, Water Supply" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="requirement-type">Requirement Type *</label>
-                                    <select id="requirement-type" required>
-                                        <option value="">Select Type</option>
-                                        <option value="water">Drinking Water</option>
-                                        <option value="education">Education</option>
-                                        <option value="health">Healthcare</option>
-                                        <option value="road">Road Connectivity</option>
-                                        <option value="electricity">Electricity</option>
-                                        <option value="sanitation">Sanitation</option>
-                                        <option value="housing">Housing</option>
-                                        <option value="other">Other</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="requirement-description">Detailed Description *</label>
-                                    <textarea id="requirement-description" placeholder="Describe the requirement in detail..." rows="4" required></textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="requirement-priority">Priority Level</label>
-                                    <select id="requirement-priority">
-                                        <option value="low">Low Priority</option>
-                                        <option value="medium" selected>Medium Priority</option>
-                                        <option value="high">High Priority</option>
-                                        <option value="urgent">Urgent</option>
-                                    </select>
-                                </div>
-
-                                <div class="form-actions">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-paper-plane"></i> Submit to Admin
-                                    </button>
-                                    <button type="button" class="btn btn-secondary" onclick="addToInfrastructure()">
-                                        <i class="fas fa-plus"></i> Add to Infrastructure List
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Report Infrastructure Issue -->
-                        <div class="infrastructure-card">
-                            <h3><i class="fas fa-tools"></i> Report Infrastructure Issue</h3>
-                            <form id="issue-report-form" class="requirement-form">
-                                <div class="form-group">
-                                    <label for="issue-title">Issue Title *</label>
-                                    <input type="text" id="issue-title" placeholder="e.g., Broken Water Pipe, Road Damage" required>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="issue-description">Issue Description *</label>
-                                    <textarea id="issue-description" placeholder="Describe the issue in detail..." rows="3" required></textarea>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="issue-location">Location of Issue</label>
-                                    <input type="text" id="issue-location" placeholder="Specific location in village">
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="issue-image">Upload Image (Optional)</label>
-                                    <div class="file-upload">
-                                        <input type="file" id="issue-image" accept="image/*">
-                                        <label for="issue-image" class="file-upload-label">
-                                            <i class="fas fa-cloud-upload-alt"></i>
-                                            <span>Choose image file</span>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="form-actions">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-exclamation-triangle"></i> Submit Issue to Admin
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
-                        <!-- Current Requirements List -->
-                        <div class="infrastructure-card full-width">
-                            <h3><i class="fas fa-list"></i> Current Requirements & Issues</h3>
-                            <div id="current-requirements-list" class="requirements-list">
-                                <!-- Requirements will be listed here -->
+                    <div class="infrastructure-card">
+                        <h3>Add New Requirement</h3>
+                        <form id="requirement-form" class="requirement-form">
+                            <div class="form-group">
+                                <label for="req-title">Requirement Title</label>
+                                <input type="text" id="req-title" placeholder="e.g., New School Building" required>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label for="req-desc">Description</label>
+                                <textarea id="req-desc" placeholder="Describe the requirement..." rows="4" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Submit to Admin
+                            </button>
+                        </form>
                     </div>
                 </div>
             </section>
 
-            <!-- Household Survey Section -->
-            <section id="household-survey" class="content-section">
+            <!-- Survey Section -->
+            <section id="survey" class="content-section">
                 <div class="section-header">
-                    <h2><i class="fas fa-clipboard-list"></i> Household Survey Data Upload</h2>
-                    <p>Upload survey data to identify village requirements through community input</p>
+                    <h2><i class="fas fa-clipboard-list"></i> Household Survey</h2>
+                    <p>Upload survey data to identify village requirements</p>
                 </div>
-
                 <div class="survey-container">
-                    <div class="survey-grid">
-                        <!-- Upload Section -->
-                        <div class="survey-card">
-                            <h3><i class="fas fa-upload"></i> Upload Survey Data</h3>
-                            <div class="upload-section">
-                                <div class="upload-info">
-                                    <i class="fas fa-file-excel"></i>
-                                    <h4>Upload Excel File</h4>
-                                    <p>Upload your household survey data in Excel format (.xlsx, .xls)</p>
+                    <div class="survey-card">
+                        <h3>Upload Survey Data</h3>
+                        <div class="upload-section">
+                            <form id="survey-form" class="upload-form">
+                                <div class="file-upload">
+                                    <input type="file" id="survey-file" accept=".xlsx,.xls">
+                                    <label for="survey-file" class="file-upload-label">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <span>Choose Excel File</span>
+                                    </label>
                                 </div>
-
-                                <form id="survey-upload-form" class="upload-form">
-                                    <div class="file-upload-area">
-                                        <input type="file" id="survey-file" accept=".xlsx,.xls" required>
-                                        <label for="survey-file" class="file-upload-label large">
-                                            <i class="fas fa-cloud-upload-alt"></i>
-                                            <span class="upload-text">Choose Excel File or Drag & Drop</span>
-                                            <span class="file-types">Supports .xlsx, .xls files</span>
-                                        </label>
-                                    </div>
-
-                                    <div class="upload-preview" id="file-preview" style="display: none;">
-                                        <h5>File Preview:</h5>
-                                        <div id="file-info"></div>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-primary btn-block upload-btn">
-                                        <i class="fas fa-paper-plane"></i> Submit to Admin for Analysis
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- Survey Information -->
-                        <div class="survey-card">
-                            <h3><i class="fas fa-info-circle"></i> How Household Survey Works</h3>
-                            <div class="survey-info">
-                                <div class="info-section">
-                                    <h4><i class="fas fa-clipboard-check"></i> Data Collection</h4>
-                                    <p>Collect household data including:</p>
-                                    <ul>
-                                        <li>Family member details</li>
-                                        <li>Basic requirements and needs</li>
-                                        <li>Infrastructure issues</li>
-                                        <li>Employment status</li>
-                                        <li>Education needs</li>
-                                    </ul>
-                                </div>
-
-                                <div class="info-section">
-                                    <h4><i class="fas fa-table"></i> Excel Format</h4>
-                                    <p>Your Excel file should include columns:</p>
-                                    <ul>
-                                        <li>SL No. - Serial Number</li>
-                                        <li>Name - Head of Household</li>
-                                        <li>Requirement - Specific need</li>
-                                        <li>Phone Number - Contact details</li>
-                                        <li>Priority - Urgency level</li>
-                                    </ul>
-                                </div>
-
-                                <div class="info-section">
-                                    <h4><i class="fas fa-brain"></i> AI Analysis</h4>
-                                    <p>Our system will analyze the data to identify:</p>
-                                    <ul>
-                                        <li>Most common requirements</li>
-                                        <li>Urgent community needs</li>
-                                        <li>Priority areas for development</li>
-                                        <li>Patterns and trends</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Quote Section -->
-                        <div class="survey-card full-width quote-card">
-                            <div class="quote-content">
-                                <i class="fas fa-quote-left"></i>
-                                <p class="quote-text">
-                                    "Community voices matter. Every household survey brings us closer to understanding 
-                                    the real needs of our village and building a better future together."
-                                </p>
-                                <div class="quote-author">
-                                    - PM-AJAY Development Initiative
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- VDP Section -->
-            <section id="vdp" class="content-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-file-alt"></i> Village Development Plan (VDP)</h2>
-                    <p>Comprehensive development plan based on community requirements</p>
-                </div>
-                <div class="form-container">
-                    <div class="vdp-content">
-                        <h3>Village Development Plan Overview</h3>
-                        <p>Based on your submitted requirements and survey data, a comprehensive development plan will be created and displayed here.</p>
-                        
-                        <div class="vdp-status">
-                            <div class="status-card">
-                                <i class="fas fa-clock"></i>
-                                <h4>Plan Under Preparation</h4>
-                                <p>Your VDP is being prepared by district administration based on submitted requirements.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Monitoring Section -->
-            <section id="monitoring" class="content-section">
-                <div class="section-header">
-                    <h2><i class="fas fa-chart-line"></i> Monitoring & Evaluation</h2>
-                    <p>50 Monitorable Indicators Tracking - Real-time monitoring of Adarsh Gram parameters</p>
-                </div>
-                <div class="monitoring-container">
-                    <div class="monitoring-grid">
-                        <div class="monitoring-card">
-                            <h3><i class="fas fa-tachometer-alt"></i> Key Performance Indicators</h3>
-                            <div class="kpi-grid">
-                                <div class="kpi-item">
-                                    <div class="kpi-value">85%</div>
-                                    <div class="kpi-label">Infrastructure Development</div>
-                                </div>
-                                <div class="kpi-item">
-                                    <div class="kpi-value">72%</div>
-                                    <div class="kpi-label">Social Development</div>
-                                </div>
-                                <div class="kpi-item">
-                                    <div class="kpi-value">68%</div>
-                                    <div class="kpi-label">Economic Development</div>
-                                </div>
-                                <div class="kpi-item">
-                                    <div class="kpi-value">91%</div>
-                                    <div class="kpi-label">Community Participation</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="monitoring-card full-width">
-                            <h3><i class="fas fa-list-ol"></i> 50 Monitorable Indicators</h3>
-                            <div class="indicators-list">
-                                <div class="indicator-category">
-                                    <h4>Infrastructure (15 Indicators)</h4>
-                                    <div class="indicators-grid">
-                                        <div class="indicator-item completed">
-                                            <i class="fas fa-check-circle"></i>
-                                            <span>Road Connectivity</span>
-                                        </div>
-                                        <div class="indicator-item in-progress">
-                                            <i class="fas fa-sync-alt"></i>
-                                            <span>Drinking Water Supply</span>
-                                        </div>
-                                        <div class="indicator-item pending">
-                                            <i class="fas fa-clock"></i>
-                                            <span>Electricity Access</span>
-                                        </div>
-                                        <!-- Add more indicators -->
-                                    </div>
-                                </div>
-                                
-                                <div class="indicator-category">
-                                    <h4>Social Development (20 Indicators)</h4>
-                                    <div class="indicators-grid">
-                                        <div class="indicator-item completed">
-                                            <i class="fas fa-check-circle"></i>
-                                            <span>Education Facilities</span>
-                                        </div>
-                                        <div class="indicator-item in-progress">
-                                            <i class="fas fa-sync-alt"></i>
-                                            <span>Healthcare Access</span>
-                                        </div>
-                                        <!-- Add more indicators -->
-                                    </div>
-                                </div>
-                            </div>
+                                <button type="submit" class="btn btn-primary btn-block upload-btn">
+                                    <i class="fas fa-paper-plane"></i> Submit to Admin
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </section>
         </main>
 
-        <!-- Footer -->
         <footer class="footer">
             <div class="footer-content">
                 <div class="footer-section">
                     <h4>PM-AJAY Adarsh Gram</h4>
-                    <p>Pradhan Mantri Anusuchit Jaati Abhyudaya Yojana</p>
                     <p>Ministry of Social Justice & Empowerment</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Contact</h4>
-                    <p>Email: pmajay@socialjustice.gov.in</p>
-                    <p>Helpline: 1800-11-0001</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Important Links</h4>
-                    <a href="https://pmagy.gov.in" target="_blank">Official Website</a>
-                    <a href="https://socialjustice.gov.in" target="_blank">MoSJE</a>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Ministry of Social Justice & Empowerment. All rights reserved.</p>
+                <p>&copy; 2024 Ministry of Social Justice & Empowerment</p>
             </div>
         </footer>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="app.js"></script>
-    <script src="dashboard.js"></script>
-    <script src="forms.js"></script>
-    <script src="map.js"></script>
 </body>
 </html>
