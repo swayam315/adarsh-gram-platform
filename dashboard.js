@@ -1,5 +1,4 @@
-// Dashboard Specific Functionality
-
+// Dashboard Manager - Advanced Dashboard Functionality
 class DashboardManager {
     constructor(app) {
         this.app = app;
@@ -9,17 +8,16 @@ class DashboardManager {
     initializeDashboard() {
         this.updateRealTimeStats();
         this.loadVillageProgress();
-        this.setupCharts();
-        this.loadQuickActions();
+        this.setupQuickActions();
+        this.initializeCharts();
     }
 
     updateRealTimeStats() {
-        // Update stats with animation
         const stats = {
-            'total-villages': this.app.villages.length,
-            'adarsh-grams': this.app.villages.filter(v => v.status === 'adarsh-gram').length,
-            'ongoing-projects': this.app.projects.filter(p => p.status === 'in-progress').length,
-            'beneficiaries': this.app.households.reduce((sum, h) => sum + (h.familyMembers || 0), 0)
+            'total-requirements': this.app.requirements.length,
+            'approved-requirements': this.app.requirements.filter(r => r.status === 'approved').length,
+            'ongoing-projects': this.app.requirements.filter(r => r.status === 'implementation').length,
+            'household-surveys': this.app.surveys.length
         };
 
         Object.keys(stats).forEach(statId => {
@@ -39,10 +37,10 @@ class DashboardManager {
         const timer = setInterval(() => {
             current += increment;
             if (current >= targetValue) {
-                element.textContent = targetValue.toLocaleString();
+                element.textContent = targetValue;
                 clearInterval(timer);
             } else {
-                element.textContent = Math.floor(current).toLocaleString();
+                element.textContent = Math.floor(current);
             }
         }, step);
     }
@@ -50,7 +48,6 @@ class DashboardManager {
     loadVillageProgress() {
         const villages = this.app.villages;
         
-        // Update progress cards if they exist
         const progressContainer = document.getElementById('village-progress-cards');
         if (progressContainer) {
             progressContainer.innerHTML = villages.map(village => `
@@ -93,91 +90,7 @@ class DashboardManager {
         return statusMap[status] || status;
     }
 
-    setupCharts() {
-        // Initialize chart placeholders
-        this.setupVillageStatusChart();
-        this.setupProgressChart();
-        this.setupRegionalDistributionChart();
-    }
-
-    setupVillageStatusChart() {
-        const statusChart = document.getElementById('village-status-chart');
-        if (!statusChart) return;
-
-        const statusCounts = {};
-        this.app.villages.forEach(village => {
-            statusCounts[village.status] = (statusCounts[village.status] || 0) + 1;
-        });
-
-        // This would be replaced with actual chart library in production
-        statusChart.innerHTML = this.createChartHTML('Village Status Distribution', statusCounts);
-    }
-
-    setupProgressChart() {
-        const progressChart = document.getElementById('progress-chart');
-        if (!progressChart) return;
-
-        const progressData = {
-            'Infrastructure': 65,
-            'Household Survey': 80,
-            'VDP Preparation': 45,
-            'Scheme Convergence': 70
-        };
-
-        progressChart.innerHTML = this.createProgressHTML('Implementation Progress', progressData);
-    }
-
-    setupRegionalDistributionChart() {
-        const regionalChart = document.getElementById('regional-chart');
-        if (!regionalChart) return;
-
-        const stateDistribution = {};
-        this.app.villages.forEach(village => {
-            stateDistribution[village.state] = (stateDistribution[village.state] || 0) + 1;
-        });
-
-        regionalChart.innerHTML = this.createChartHTML('State-wise Distribution', stateDistribution);
-    }
-
-    createChartHTML(title, data) {
-        return `
-            <div class="chart-header">
-                <h4>${title}</h4>
-            </div>
-            <div class="chart-data">
-                ${Object.entries(data).map(([key, value]) => `
-                    <div class="chart-item">
-                        <span class="chart-label">${key}</span>
-                        <span class="chart-value">${value}</span>
-                        <div class="chart-bar">
-                            <div class="chart-fill" style="width: ${(value / Math.max(...Object.values(data))) * 100}%"></div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    }
-
-    createProgressHTML(title, data) {
-        return `
-            <div class="chart-header">
-                <h4>${title}</h4>
-            </div>
-            <div class="progress-data">
-                ${Object.entries(data).map(([key, value]) => `
-                    <div class="progress-item">
-                        <span class="progress-label">${key}</span>
-                        <span class="progress-value">${value}%</span>
-                        <div class="progress-bar">
-                            <div class="progress-fill" style="width: ${value}%"></div>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    }
-
-    loadQuickActions() {
+    setupQuickActions() {
         const actionsContainer = document.getElementById('quick-actions-container');
         if (!actionsContainer) return;
 
@@ -228,10 +141,33 @@ class DashboardManager {
         `).join('');
     }
 
+    initializeCharts() {
+        this.createProgressChart();
+        this.createGrowthChart();
+    }
+
+    createProgressChart() {
+        const ctx = document.getElementById('village-progress-chart');
+        if (!ctx) return;
+
+        // For now, we'll use a placeholder
+        // In production, this would use Chart.js or similar
+        console.log('Progress chart would be initialized here with Chart.js');
+    }
+
+    createGrowthChart() {
+        const ctx = document.getElementById('village-growth-chart');
+        if (!ctx) return;
+
+        // For now, we'll use a placeholder
+        // In production, this would use Chart.js or similar
+        console.log('Growth chart would be initialized here with Chart.js');
+    }
+
     refreshDashboard() {
         this.updateRealTimeStats();
         this.loadVillageProgress();
-        this.setupCharts();
+        this.initializeCharts();
     }
 }
 
@@ -241,3 +177,5 @@ document.addEventListener('DOMContentLoaded', function() {
         window.dashboardManager = new DashboardManager(window.app);
     }
 });
+
+console.log('🚀 Dashboard Manager Loaded');
