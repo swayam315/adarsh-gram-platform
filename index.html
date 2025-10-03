@@ -9,13 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="styles/dashboard.css">
+    <link rel="stylesheet" href="styles/forms.css">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
-                <img src="assets/icons/govt-logo.png" alt="Government Logo" class="govt-logo">
+                <img src="assets/icons/govt-logo.png" alt="Government Logo" class="govt-logo" onerror="this.style.display='none'">
                 <div class="logo-text">
                     <span class="main-title">PM-AJAY</span>
                     <span class="sub-title">Adarsh Gram Platform</span>
@@ -97,22 +98,12 @@
                 </div>
             </div>
 
+            <!-- Quick Actions Grid -->
             <div class="dashboard-grid">
                 <div class="grid-item">
                     <h3>Quick Actions</h3>
-                    <div class="action-buttons">
-                        <button class="action-btn" onclick="showSection('village-profile')">
-                            <i class="fas fa-plus"></i> Register New Village
-                        </button>
-                        <button class="action-btn" onclick="showSection('infrastructure-assessment')">
-                            <i class="fas fa-clipboard-check"></i> Infrastructure Assessment
-                        </button>
-                        <button class="action-btn" onclick="showSection('household-survey')">
-                            <i class="fas fa-house-user"></i> Start Household Survey
-                        </button>
-                        <button class="action-btn" onclick="showSection('vdp')">
-                            <i class="fas fa-file-contract"></i> Create VDP
-                        </button>
+                    <div id="quick-actions-container" class="action-buttons">
+                        <!-- Quick actions will be loaded here by dashboard.js -->
                     </div>
                 </div>
 
@@ -128,36 +119,54 @@
                     <div id="progress-map" class="map-container"></div>
                 </div>
             </div>
+
+            <!-- Additional Dashboard Sections -->
+            <div class="dashboard-grid">
+                <div class="grid-item">
+                    <h3>Village Status Distribution</h3>
+                    <div id="village-status-chart" class="chart-container">
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-pie"></i> Chart will be displayed here
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid-item">
+                    <h3>Implementation Progress</h3>
+                    <div id="progress-chart" class="chart-container">
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-bar"></i> Progress chart will be displayed here
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
-        <!-- Village Profile Section (Format-1) -->
+        <!-- Other sections remain the same but will be populated dynamically -->
         <section id="village-profile" class="content-section">
             <div class="section-header">
                 <h2><i class="fas fa-village"></i> Village Profile & Convergence Committee</h2>
                 <p>Format-1: Basic village details and committee formation</p>
             </div>
-            <!-- Form content will be loaded dynamically -->
+            <!-- Form content will be loaded dynamically by app.js -->
         </section>
 
-        <!-- Infrastructure Assessment Section (Format-2 & Format-4) -->
         <section id="infrastructure-assessment" class="content-section">
             <div class="section-header">
                 <h2><i class="fas fa-hard-hat"></i> Infrastructure Assessment & Action Plan</h2>
                 <p>Format-2 & Format-4: Gap assessment and estimated action plan</p>
             </div>
-            <!-- Form content will be loaded dynamically -->
+            <!-- Form content will be loaded dynamically by forms.js -->
         </section>
 
-        <!-- Household Survey Section (Format-3A & Format-3B) -->
         <section id="household-survey" class="content-section">
             <div class="section-header">
                 <h2><i class="fas fa-clipboard-list"></i> Household Survey & Beneficiary Mapping</h2>
                 <p>Format-3A & Format-3B: Individual needs assessment and scheme mapping</p>
             </div>
-            <!-- Form content will be loaded dynamically -->
+            <!-- Form content will be loaded dynamically by forms.js -->
         </section>
 
-        <!-- VDP Section -->
         <section id="vdp" class="content-section">
             <div class="section-header">
                 <h2><i class="fas fa-file-alt"></i> Village Development Plan (VDP)</h2>
@@ -166,7 +175,6 @@
             <!-- VDP content will be loaded dynamically -->
         </section>
 
-        <!-- Monitoring Section -->
         <section id="monitoring" class="content-section">
             <div class="section-header">
                 <h2><i class="fas fa-chart-line"></i> Monitoring & Evaluation</h2>
@@ -175,12 +183,11 @@
             <!-- Monitoring content will be loaded dynamically -->
         </section>
 
-        <!-- Admin Login Section -->
         <section id="admin-login" class="content-section">
             <div class="login-container">
                 <div class="login-card">
                     <div class="login-header">
-                        <img src="assets/icons/govt-logo.png" alt="Government Logo" class="login-logo">
+                        <img src="assets/icons/govt-logo.png" alt="Government Logo" class="login-logo" onerror="this.style.display='none'">
                         <h2>Government Official Login</h2>
                     </div>
                     <form id="admin-login-form">
