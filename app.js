@@ -1,45 +1,180 @@
-// Main Application Controller
-class AdarshGramPlatform {
+// Main Application Controller for Village Volunteer Portal
+class VillageVolunteerPortal {
     constructor() {
         this.currentUser = null;
         this.currentSection = 'dashboard';
-        this.villages = JSON.parse(localStorage.getItem('villages')) || [];
-        this.households = JSON.parse(localStorage.getItem('households')) || [];
-        this.projects = JSON.parse(localStorage.getItem('projects')) || [];
-        this.monitoringData = JSON.parse(localStorage.getItem('monitoringData')) || [];
+        this.currentVillage = null;
+        this.requirements = JSON.parse(localStorage.getItem('village_requirements')) || [];
+        this.surveys = JSON.parse(localStorage.getItem('village_surveys')) || [];
+        this.villageData = JSON.parse(localStorage.getItem('village_data')) || {};
         this.init();
     }
 
     init() {
-        this.loadDashboard();
+        this.checkLoginStatus();
         this.setupEventListeners();
-        this.setupServiceWorker();
         this.loadSampleData();
         
-        console.log('🚀 PM-AJAY Adarsh Gram Platform Initialized');
+        console.log('🚀 PM-AJAY Village Volunteer Portal Initialized');
+    }
+
+    checkLoginStatus() {
+        const savedUser = localStorage.getItem('current_village_user');
+        if (savedUser) {
+            this.currentUser = JSON.parse(savedUser);
+            this.currentVillage = JSON.parse(localStorage.getItem('current_village_data'));
+            this.showMainApp();
+        }
     }
 
     setupEventListeners() {
-        // Admin login form
-        const loginForm = document.getElementById('admin-login-form');
+        // Login form
+        const loginForm = document.getElementById('login-form');
         if (loginForm) {
             loginForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-                this.handleAdminLogin();
+                this.handleLogin();
             });
         }
 
-        // Navigation
-        document.addEventListener('click', (e) => {
-            if (e.target.matches('.nav-link') || e.target.closest('.nav-link')) {
+        // Requirement forms
+        document.addEventListener('submit', (e) => {
+            if (e.target.id === 'new-requirement-form') {
                 e.preventDefault();
-                const link = e.target.matches('.nav-link') ? e.target : e.target.closest('.nav-link');
-                const section = link.getAttribute('onclick')?.match(/showSection\('([^']+)'\)/)?.[1];
-                if (section) {
-                    this.showSection(section);
-                }
+                this.submitNewRequirement();
+            }
+            if (e.target.id === 'issue-report-form') {
+                e.preventDefault();
+                this.submitIssueReport();
+            }
+            if (e.target.id === 'survey-upload-form') {
+                e.preventDefault();
+                this.submitSurveyData();
             }
         });
+
+        // File upload preview
+        const surveyFile = document.getElementById('survey-file');
+        if (surveyFile) {
+            surveyFile.addEventListener('change', (e) => {
+                this.previewFile(e.target.files[0]);
+            });
+        }
+    }
+
+    handleLogin() {
+        const villageName = document.getElementById('village-name').value;
+        const password = document.getElementById('password').value;
+
+        if (villageName && password) {
+            // Simple authentication - in real app, this would call an API
+            this.currentUser = {
+                villageName: villageName,
+                loginTime: new Date().toISOString(),
+                role: 'volunteer'
+            };
+
+            this.currentVillage = this.getVillageData(villageName);
+            
+            localStorage.setItem('current_village_user', JSON.stringify(this.currentUser));
+            localStorage.setItem('current_village_data', JSON.stringify(this.currentVillage));
+            
+            this.showMainApp();
+        } else {
+            alert('Please enter village name and password.');
+        }
+    }
+
+    loginAsDemo() {
+        this.currentUser = {
+            villageName: 'Demo Village',
+            loginTime: new Date().toISOString(),
+            role: 'volunteer'
+        };
+
+        this.currentVillage = {
+            name: 'Demo Village',
+            gramPanchayat: 'Demo Gram Panchayat',
+            district: 'Sample District',
+            state: 'Sample State',
+            population: 1250,
+            scPopulation: 680,
+            scPercentage: 54.4,
+            committee: [
+                { name: 'Rajesh Kumar', designation: 'Sarpanch', phone: '9876543210' },
+                { name: 'Priya Singh', designation: 'Volunteer', phone: '9876543211' }
+            ]
+        };
+
+        localStorage.setItem('current_village_user', JSON.stringify(this.currentUser));
+        localStorage.setItem('current_village_data', JSON.stringify(this.currentVillage));
+        
+        this.showMainApp();
+    }
+
+    getVillageData(villageName) {
+        // In real app, this would fetch from API
+        return {
+            name: villageName,
+            gramPanchayat: `${villageName} Gram Panchayat`,
+            district: 'Sample District',
+            state: 'Sample State',
+            population: 1200,
+            scPopulation: 650,
+            scPercentage: 54.2,
+            committee: [
+                { name: 'Committee Member 1', designation: 'Sarpanch', phone: '9876543210' },
+                { name: 'Committee Member 2', designation: 'Volunteer', phone: '9876543211' }
+            ]
+        };
+    }
+
+    showMainApp() {
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        
+        this.updateVillageInfo();
+        this.showSection('dashboard');
+        this.loadDashboard();
+    }
+
+    logout() {
+        this.currentUser = null;
+        this.currentVillage = null;
+        localStorage.removeItem('current_village_user');
+        localStorage.removeItem('current_village_data');
+        
+        document.getElementById('login-page').style.display = 'block';
+        document.getElementById('main-app').style.display = 'none';
+        
+        // Reset login form
+        document.getElementById('login-form').reset();
+    }
+
+    updateVillageInfo() {
+        if (this.currentVillage) {
+            document.getElementById('current-village-name').textContent = this.currentVillage.name;
+            document.getElementById('dashboard-village-name').textContent = this.currentVillage.name;
+            
+            // Update profile page
+            document.getElementById('profile-village-name').textContent = this.currentVillage.name;
+            document.getElementById('profile-gram-panchayat').textContent = this.currentVillage.gramPanchayat;
+            document.getElementById('profile-district').textContent = this.currentVillage.district;
+            document.getElementById('profile-population').textContent = this.currentVillage.population;
+            document.getElementById('profile-sc-population').textContent = `${this.currentVillage.scPopulation} (${this.currentVillage.scPercentage}%)`;
+            
+            // Update committee members
+            const committeeList = document.getElementById('committee-members-list');
+            if (committeeList && this.currentVillage.committee) {
+                committeeList.innerHTML = this.currentVillage.committee.map(member => `
+                    <div class="committee-member-item">
+                        <strong>${member.name}</strong>
+                        <div>${member.designation}</div>
+                        <div class="phone">${member.phone}</div>
+                    </div>
+                `).join('');
+            }
+        }
     }
 
     showSection(sectionName) {
@@ -76,7 +211,7 @@ class AdarshGramPlatform {
                 this.loadDashboard();
                 break;
             case 'village-profile':
-                this.loadVillageProfileForm();
+                this.loadVillageProfile();
                 break;
             case 'infrastructure-assessment':
                 this.loadInfrastructureAssessment();
@@ -84,31 +219,26 @@ class AdarshGramPlatform {
             case 'household-survey':
                 this.loadHouseholdSurvey();
                 break;
-            case 'vdp':
-                this.loadVDPForm();
-                break;
-            case 'monitoring':
-                this.loadMonitoringDashboard();
-                break;
         }
     }
 
     loadDashboard() {
         this.updateDashboardStats();
         this.loadRecentActivity();
-        this.initializeProgressMap();
+        this.loadRequirementsStatus();
+        this.initializeCharts();
     }
 
     updateDashboardStats() {
-        const totalVillages = this.villages.length;
-        const adarshGrams = this.villages.filter(v => v.status === 'adarsh-gram').length;
-        const ongoingProjects = this.projects.filter(p => p.status === 'in-progress').length;
-        const totalBeneficiaries = this.households.reduce((sum, h) => sum + (h.familyMembers || 0), 0);
+        const totalRequirements = this.requirements.length;
+        const approvedRequirements = this.requirements.filter(r => r.status === 'approved').length;
+        const ongoingProjects = this.requirements.filter(r => r.status === 'implementation').length;
+        const completedSurveys = this.surveys.length;
 
-        document.getElementById('total-villages').textContent = totalVillages;
-        document.getElementById('adarsh-grams').textContent = adarshGrams;
+        document.getElementById('total-requirements').textContent = totalRequirements;
+        document.getElementById('approved-requirements').textContent = approvedRequirements;
         document.getElementById('ongoing-projects').textContent = ongoingProjects;
-        document.getElementById('beneficiaries').textContent = totalBeneficiaries.toLocaleString();
+        document.getElementById('household-surveys').textContent = completedSurveys;
     }
 
     loadRecentActivity() {
@@ -117,30 +247,34 @@ class AdarshGramPlatform {
 
         const activities = [
             {
-                title: 'New Village Registered',
-                description: 'Gram Panchayat A has been registered in the system',
+                title: 'New Requirement Submitted',
+                description: 'Road repair requirement sent to admin',
                 time: '2 hours ago',
-                type: 'village'
+                type: 'requirement'
             },
             {
-                title: 'Infrastructure Assessment Completed',
-                description: 'Format-2 submitted for Gram Panchayat B',
+                title: 'Survey Data Uploaded',
+                description: 'Household survey data submitted for analysis',
                 time: '1 day ago',
-                type: 'assessment'
-            },
-            {
-                title: 'Household Survey Started',
-                description: 'Format-3A initiated for 50 households',
-                time: '2 days ago',
                 type: 'survey'
             },
             {
-                title: 'VDP Approved',
-                description: 'Village Development Plan approved by DLCC',
+                title: 'Requirement Approved',
+                description: 'Water supply project approved by admin',
                 time: '3 days ago',
-                type: 'vdp'
+                type: 'approval'
             }
         ];
+
+        // Add actual requirements as activities
+        this.requirements.slice(0, 3).forEach(req => {
+            activities.unshift({
+                title: `Requirement: ${req.title}`,
+                description: req.description.substring(0, 50) + '...',
+                time: this.formatTimeAgo(new Date(req.submittedAt)),
+                type: 'requirement'
+            });
+        });
 
         activityContainer.innerHTML = activities.map(activity => `
             <div class="activity-item">
@@ -151,385 +285,346 @@ class AdarshGramPlatform {
         `).join('');
     }
 
-    initializeProgressMap() {
-        const mapContainer = document.getElementById('progress-map');
-        if (!mapContainer) return;
+    loadRequirementsStatus() {
+        const container = document.getElementById('requirements-status');
+        if (!container) return;
 
-        // Initialize Leaflet map
-        const map = L.map('progress-map').setView([28.6139, 77.2090], 5);
-        
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
+        const requirements = this.requirements.slice(0, 5); // Show latest 5
 
-        // Add village markers
-        this.villages.forEach(village => {
-            if (village.location) {
-                const statusColor = this.getVillageStatusColor(village.status);
-                const marker = L.circleMarker([village.location.lat, village.location.lng], {
-                    color: statusColor,
-                    fillColor: statusColor,
-                    fillOpacity: 0.7,
-                    radius: 8
-                }).addTo(map);
-
-                marker.bindPopup(`
-                    <div class="village-popup">
-                        <h4>${village.name}</h4>
-                        <p><strong>Status:</strong> ${this.getStatusText(village.status)}</p>
-                        <p><strong>SC Population:</strong> ${village.scPopulation}%</p>
-                        <p><strong>Total Population:</strong> ${village.totalPopulation}</p>
+        container.innerHTML = requirements.map(req => `
+            <div class="requirement-item">
+                <div class="requirement-header">
+                    <div class="requirement-title">${req.title}</div>
+                    <div class="requirement-status status-${req.status}">
+                        ${this.getStatusText(req.status)}
                     </div>
-                `);
+                </div>
+                <div class="requirement-desc">${req.description}</div>
+                <div class="requirement-meta">
+                    <span>Type: ${req.type}</span>
+                    <span>Priority: ${req.priority}</span>
+                    <span>Submitted: ${new Date(req.submittedAt).toLocaleDateString()}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    initializeCharts() {
+        this.createProgressChart();
+        this.createGrowthChart();
+    }
+
+    createProgressChart() {
+        const ctx = document.getElementById('village-progress-chart');
+        if (!ctx) return;
+
+        const data = {
+            labels: ['Infrastructure', 'Education', 'Healthcare', 'Water Supply', 'Roads'],
+            datasets: [{
+                label: 'Completion %',
+                data: [65, 80, 45, 70, 55],
+                backgroundColor: [
+                    'rgba(46, 125, 50, 0.8)',
+                    'rgba(76, 175, 80, 0.8)',
+                    'rgba(255, 152, 0, 0.8)',
+                    'rgba(33, 150, 243, 0.8)',
+                    'rgba(156, 39, 176, 0.8)'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
             }
         });
     }
 
-    getVillageStatusColor(status) {
-        const colors = {
-            'registered': '#FF9800',
-            'assessment': '#2196F3',
-            'vdp-approved': '#4CAF50',
-            'implementation': '#9C27B0',
-            'adarsh-gram': '#2E7D32'
+    createGrowthChart() {
+        const ctx = document.getElementById('village-growth-chart');
+        if (!ctx) return;
+
+        const data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{
+                label: 'Development Progress',
+                data: [20, 35, 45, 55, 65, 75],
+                borderColor: 'rgba(46, 125, 50, 1)',
+                backgroundColor: 'rgba(46, 125, 50, 0.1)',
+                fill: true,
+                tension: 0.4
+            }]
         };
-        return colors[status] || '#666';
+
+        new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
     }
 
+    loadVillageProfile() {
+        this.updateProgressTracking();
+        this.loadRequirementsDetails();
+    }
+
+    updateProgressTracking() {
+        const submitted = this.requirements.length;
+        const underReview = this.requirements.filter(r => r.status === 'review').length;
+        const approved = this.requirements.filter(r => r.status === 'approved').length;
+        const implementation = this.requirements.filter(r => r.status === 'implementation').length;
+        const completed = this.requirements.filter(r => r.status === 'completed').length;
+
+        document.getElementById('submitted-count').textContent = `${submitted} requirements sent to admin`;
+        document.getElementById('review-count').textContent = `${underReview} requirements being reviewed`;
+        document.getElementById('approved-count').textContent = `${approved} requirements approved`;
+        document.getElementById('implementation-count').textContent = `${implementation} projects in progress`;
+        document.getElementById('completed-count').textContent = `${completed} projects completed`;
+    }
+
+    loadRequirementsDetails() {
+        const tbody = document.getElementById('requirements-details-body');
+        if (!tbody) return;
+
+        tbody.innerHTML = this.requirements.map(req => `
+            <tr>
+                <td>${req.title}</td>
+                <td>${this.getTypeText(req.type)}</td>
+                <td><span class="requirement-status status-${req.status}">${this.getStatusText(req.status)}</span></td>
+                <td>${new Date(req.submittedAt).toLocaleDateString()}</td>
+                <td>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${this.getProgressPercentage(req.status)}%"></div>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    loadInfrastructureAssessment() {
+        this.loadCurrentRequirements();
+    }
+
+    loadCurrentRequirements() {
+        const container = document.getElementById('current-requirements-list');
+        if (!container) return;
+
+        container.innerHTML = this.requirements.map(req => `
+            <div class="requirement-item">
+                <div class="requirement-header">
+                    <div class="requirement-title">${req.title}</div>
+                    <div class="requirement-status status-${req.status}">
+                        ${this.getStatusText(req.status)}
+                    </div>
+                </div>
+                <div class="requirement-desc">${req.description}</div>
+                <div class="requirement-meta">
+                    <span>Type: ${this.getTypeText(req.type)}</span>
+                    <span>Priority: ${req.priority}</span>
+                    <span>Submitted: ${new Date(req.submittedAt).toLocaleDateString()}</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    submitNewRequirement() {
+        const title = document.getElementById('requirement-title').value;
+        const type = document.getElementById('requirement-type').value;
+        const description = document.getElementById('requirement-description').value;
+        const priority = document.getElementById('requirement-priority').value;
+
+        const requirement = {
+            id: Date.now(),
+            title,
+            type,
+            description,
+            priority,
+            status: 'pending',
+            submittedAt: new Date().toISOString(),
+            village: this.currentVillage.name
+        };
+
+        this.requirements.unshift(requirement);
+        this.saveData();
+        
+        alert('Requirement submitted to admin successfully!');
+        document.getElementById('new-requirement-form').reset();
+        this.loadDashboard();
+        this.loadInfrastructureAssessment();
+    }
+
+    submitIssueReport() {
+        const title = document.getElementById('issue-title').value;
+        const description = document.getElementById('issue-description').value;
+        const location = document.getElementById('issue-location').value;
+
+        const issue = {
+            id: Date.now(),
+            title: `Issue: ${title}`,
+            type: 'infrastructure_issue',
+            description: `Location: ${location}\n\n${description}`,
+            priority: 'high',
+            status: 'pending',
+            submittedAt: new Date().toISOString(),
+            village: this.currentVillage.name
+        };
+
+        this.requirements.unshift(issue);
+        this.saveData();
+        
+        alert('Infrastructure issue reported to admin successfully!');
+        document.getElementById('issue-report-form').reset();
+        this.loadDashboard();
+        this.loadInfrastructureAssessment();
+    }
+
+    submitSurveyData() {
+        const fileInput = document.getElementById('survey-file');
+        if (!fileInput.files.length) {
+            alert('Please select an Excel file to upload.');
+            return;
+        }
+
+        const survey = {
+            id: Date.now(),
+            fileName: fileInput.files[0].name,
+            fileSize: (fileInput.files[0].size / 1024).toFixed(2) + ' KB',
+            submittedAt: new Date().toISOString(),
+            village: this.currentVillage.name,
+            status: 'submitted'
+        };
+
+        this.surveys.unshift(survey);
+        this.saveData();
+        
+        alert('Survey data submitted to admin for analysis! Our AI system will process the data and identify key requirements.');
+        document.getElementById('survey-upload-form').reset();
+        document.getElementById('file-preview').style.display = 'none';
+        this.loadDashboard();
+    }
+
+    previewFile(file) {
+        if (file) {
+            const fileInfo = document.getElementById('file-info');
+            const preview = document.getElementById('file-preview');
+            
+            fileInfo.innerHTML = `
+                <div><strong>File Name:</strong> ${file.name}</div>
+                <div><strong>File Size:</strong> ${(file.size / 1024).toFixed(2)} KB</div>
+                <div><strong>File Type:</strong> ${file.type || 'Excel Spreadsheet'}</div>
+            `;
+            
+            preview.style.display = 'block';
+        }
+    }
+
+    addToInfrastructure() {
+        alert('Requirement added to your local infrastructure list. Remember to submit to admin for approval.');
+    }
+
+    // Utility methods
     getStatusText(status) {
         const statusMap = {
-            'registered': 'Registered',
-            'assessment': 'Under Assessment',
-            'vdp-approved': 'VDP Approved',
+            'pending': 'Pending',
+            'review': 'Under Review',
+            'approved': 'Approved',
             'implementation': 'Implementation',
-            'adarsh-gram': 'Adarsh Gram'
+            'completed': 'Completed'
         };
         return statusMap[status] || status;
     }
 
-    // Village Profile Form (Format-1)
-    loadVillageProfileForm() {
-        const container = document.getElementById('village-profile');
-        if (!container) return;
-
-        container.innerHTML += `
-            <div class="form-container">
-                <div class="form-steps">
-                    <div class="step active">
-                        <div class="step-number">1</div>
-                        <div class="step-label">Village Details</div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div class="step-label">Convergence Committee</div>
-                    </div>
-                    <div class="step">
-                        <div class="step-number">3</div>
-                        <div class="step-label">Review & Submit</div>
-                    </div>
-                </div>
-
-                <form id="village-profile-form">
-                    <div class="form-section">
-                        <div class="form-section-header">
-                            <h3><i class="fas fa-info-circle"></i> Basic Village Information</h3>
-                            <p>As per latest Census data and official records</p>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="village-name">Village Name *</label>
-                                <input type="text" id="village-name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="gram-panchayat">Gram Panchayat *</label>
-                                <input type="text" id="gram-panchayat" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="district">District *</label>
-                                <input type="text" id="district" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="state">State *</label>
-                                <input type="text" id="state" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="total-population">Total Population *</label>
-                                <input type="number" id="total-population" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="sc-population">SC Population *</label>
-                                <input type="number" id="sc-population" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="sc-percentage">SC Percentage *</label>
-                                <input type="number" id="sc-percentage" step="0.1" required>
-                            </div>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="census-code">Census Code *</label>
-                                <input type="text" id="census-code" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="village-type">Village Type</label>
-                                <select id="village-type">
-                                    <option value="rural">Rural</option>
-                                    <option value="tribal">Tribal</option>
-                                    <option value="remote">Remote/Hilly</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-section">
-                        <div class="form-section-header">
-                            <h3><i class="fas fa-users"></i> Convergence Committee Details</h3>
-                            <p>Committee members responsible for scheme implementation</p>
-                        </div>
-                        
-                        <div id="committee-members">
-                            <div class="committee-member">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label>Name *</label>
-                                        <input type="text" name="member-name" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Designation *</label>
-                                        <input type="text" name="member-designation" required>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label>Contact Number</label>
-                                        <input type="tel" name="member-phone">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Email</label>
-                                        <input type="email" name="member-email">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <button type="button" class="btn btn-secondary" onclick="app.addCommitteeMember()">
-                            <i class="fas fa-plus"></i> Add Committee Member
-                        </button>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary">Save Draft</button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i> Submit Format-1
-                        </button>
-                    </div>
-                </form>
-            </div>
-        `;
-
-        // Add form submission handler
-        const form = document.getElementById('village-profile-form');
-        if (form) {
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.submitVillageProfile();
-            });
-        }
-    }
-
-    addCommitteeMember() {
-        const container = document.getElementById('committee-members');
-        const newMember = document.createElement('div');
-        newMember.className = 'committee-member';
-        newMember.innerHTML = `
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Name *</label>
-                    <input type="text" name="member-name" required>
-                </div>
-                <div class="form-group">
-                    <label>Designation *</label>
-                    <input type="text" name="member-designation" required>
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Contact Number</label>
-                    <input type="tel" name="member-phone">
-                </div>
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="email" name="member-email">
-                </div>
-            </div>
-            <button type="button" class="btn btn-secondary" onclick="this.parentElement.remove()">
-                <i class="fas fa-trash"></i> Remove
-            </button>
-        `;
-        container.appendChild(newMember);
-    }
-
-    submitVillageProfile() {
-        const formData = new FormData(document.getElementById('village-profile-form'));
-        
-        const villageData = {
-            id: Date.now(),
-            name: document.getElementById('village-name').value,
-            gramPanchayat: document.getElementById('gram-panchayat').value,
-            district: document.getElementById('district').value,
-            state: document.getElementById('state').value,
-            totalPopulation: parseInt(document.getElementById('total-population').value),
-            scPopulation: parseInt(document.getElementById('sc-population').value),
-            scPercentage: parseFloat(document.getElementById('sc-percentage').value),
-            censusCode: document.getElementById('census-code').value,
-            villageType: document.getElementById('village-type').value,
-            status: 'registered',
-            registrationDate: new Date().toISOString(),
-            location: this.generateVillageLocation()
+    getTypeText(type) {
+        const typeMap = {
+            'water': 'Drinking Water',
+            'education': 'Education',
+            'health': 'Healthcare',
+            'road': 'Road Connectivity',
+            'electricity': 'Electricity',
+            'sanitation': 'Sanitation',
+            'housing': 'Housing',
+            'other': 'Other',
+            'infrastructure_issue': 'Infrastructure Issue'
         };
-
-        this.villages.push(villageData);
-        this.saveToStorage();
-        
-        alert('Village profile submitted successfully!');
-        this.showSection('dashboard');
-        this.loadDashboard();
+        return typeMap[type] || type;
     }
 
-    generateVillageLocation() {
-        // Generate random location in India for demo
-        const indiaBounds = {
-            lat: [8.0, 37.0],
-            lng: [68.0, 97.0]
+    getProgressPercentage(status) {
+        const progressMap = {
+            'pending': 25,
+            'review': 50,
+            'approved': 75,
+            'implementation': 90,
+            'completed': 100
         };
-        
-        return {
-            lat: indiaBounds.lat[0] + Math.random() * (indiaBounds.lat[1] - indiaBounds.lat[0]),
-            lng: indiaBounds.lng[0] + Math.random() * (indiaBounds.lng[1] - indiaBounds.lng[0])
-        };
+        return progressMap[status] || 0;
     }
 
-    // Infrastructure Assessment (Format-2 & Format-4)
-    loadInfrastructureAssessment() {
-        const container = document.getElementById('infrastructure-assessment');
-        // Implementation for Format-2 and Format-4 forms
-        container.innerHTML = `
-            <div class="form-container">
-                <h3>Infrastructure Gap Assessment & Action Plan</h3>
-                <p>Format-2: Infrastructure Requirements | Format-4: Estimated Action Plan</p>
-                <!-- Form implementation here -->
-            </div>
-        `;
+    formatTimeAgo(date) {
+        const now = new Date();
+        const diffMs = now - date;
+        const diffMins = Math.floor(diffMs / 60000);
+        const diffHours = Math.floor(diffMs / 3600000);
+        const diffDays = Math.floor(diffMs / 86400000);
+
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins} minutes ago`;
+        if (diffHours < 24) return `${diffHours} hours ago`;
+        if (diffDays < 7) return `${diffDays} days ago`;
+        return date.toLocaleDateString();
     }
 
-    // Household Survey (Format-3A & Format-3B)
-    loadHouseholdSurvey() {
-        const container = document.getElementById('household-survey');
-        // Implementation for Format-3A and Format-3B forms
-        container.innerHTML = `
-            <div class="form-container">
-                <h3>Household Survey & Beneficiary Mapping</h3>
-                <p>Format-3A: Individual Needs Assessment | Format-3B: Scheme Mapping</p>
-                <!-- Form implementation here -->
-            </div>
-        `;
-    }
-
-    // VDP Form
-    loadVDPForm() {
-        const container = document.getElementById('vdp');
-        // Implementation for VDP creation
-        container.innerHTML = `
-            <div class="form-container">
-                <h3>Village Development Plan (VDP)</h3>
-                <p>Comprehensive development plan formulation</p>
-                <!-- VDP form implementation here -->
-            </div>
-        `;
-    }
-
-    // Monitoring Dashboard
-    loadMonitoringDashboard() {
-        const container = document.getElementById('monitoring');
-        // Implementation for 50 monitorable indicators
-        container.innerHTML = `
-            <div class="form-container">
-                <h3>50 Monitorable Indicators Tracking</h3>
-                <p>Real-time monitoring of Adarsh Gram parameters</p>
-                <!-- Monitoring dashboard implementation here -->
-            </div>
-        `;
-    }
-
-    // Admin Login
-    handleAdminLogin() {
-        const officialId = document.getElementById('official-id').value;
-        const password = document.getElementById('password').value;
-        const department = document.getElementById('department').value;
-
-        // Simple authentication for demo
-        if (officialId && password && department) {
-            this.currentUser = {
-                officialId: officialId,
-                department: department,
-                loginTime: new Date().toISOString()
-            };
-            
-            alert('Login successful! Welcome to PM-AJAY Admin Dashboard.');
-            this.showSection('dashboard');
-        } else {
-            alert('Please fill all required fields.');
-        }
-    }
-
-    // Data Management
-    saveToStorage() {
-        localStorage.setItem('villages', JSON.stringify(this.villages));
-        localStorage.setItem('households', JSON.stringify(this.households));
-        localStorage.setItem('projects', JSON.stringify(this.projects));
-        localStorage.setItem('monitoringData', JSON.stringify(this.monitoringData));
+    saveData() {
+        localStorage.setItem('village_requirements', JSON.stringify(this.requirements));
+        localStorage.setItem('village_surveys', JSON.stringify(this.surveys));
+        localStorage.setItem('village_data', JSON.stringify(this.villageData));
     }
 
     loadSampleData() {
-        if (this.villages.length === 0) {
-            this.villages = [
+        if (this.requirements.length === 0) {
+            // Add some sample requirements
+            this.requirements = [
                 {
                     id: 1,
-                    name: 'Gram Panchayat A',
-                    gramPanchayat: 'GP A',
-                    district: 'Sample District',
-                    state: 'Sample State',
-                    totalPopulation: 1200,
-                    scPopulation: 650,
-                    scPercentage: 54.2,
-                    censusCode: 'SMP001',
-                    villageType: 'rural',
-                    status: 'registered',
-                    registrationDate: new Date().toISOString(),
-                    location: { lat: 28.6139, lng: 77.2090 }
+                    title: 'New School Building',
+                    type: 'education',
+                    description: 'Require new school building with proper classrooms and facilities for 200 students',
+                    priority: 'high',
+                    status: 'approved',
+                    submittedAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                    village: 'Demo Village'
+                },
+                {
+                    id: 2,
+                    title: 'Road Repair Work',
+                    type: 'road',
+                    description: 'Main village road needs urgent repair before monsoon season',
+                    priority: 'urgent',
+                    status: 'implementation',
+                    submittedAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+                    village: 'Demo Village'
                 }
             ];
-            this.saveToStorage();
-        }
-    }
-
-    setupServiceWorker() {
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js')
-                .then(registration => {
-                    console.log('Service Worker registered successfully');
-                })
-                .catch(error => {
-                    console.log('Service Worker registration failed:', error);
-                });
+            this.saveData();
         }
     }
 }
@@ -541,9 +636,27 @@ function showSection(sectionName) {
     }
 }
 
+function loginAsDemo() {
+    if (window.app) {
+        window.app.loginAsDemo();
+    }
+}
+
+function logout() {
+    if (window.app) {
+        window.app.logout();
+    }
+}
+
+function addToInfrastructure() {
+    if (window.app) {
+        window.app.addToInfrastructure();
+    }
+}
+
 // Initialize application
 let app;
 document.addEventListener('DOMContentLoaded', function() {
-    app = new AdarshGramPlatform();
-    window.app = app; // Make it globally available
+    app = new VillageVolunteerPortal();
+    window.app = app;
 });
